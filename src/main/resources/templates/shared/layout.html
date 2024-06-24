@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.utraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style th:replace="~{shared/style}"></style>
+
+
+</head>
+
+<body>
+    <script th:src="@{/assets/static/js/initTheme.js}"></script>
+
+    <!-- ./app -->
+    <div id="app">
+
+        <!--  Sidebar  -->
+        <div th:replace="~{/shared/sidebar}"></div>
+
+        <!-- Main. Contains page content -->
+        <div id="main">
+            <header class="mb-3">
+                <a href="#" class="burger-btn d-block d-xl-none">
+                    <i class="bi bi-justify fs-3"></i>
+                </a>
+            </header>
+            <div layout:fragment="content">
+
+
+            </div>
+
+            <div th:replace="~{/shared/footer}"></div>
+        </div>
+        <!-- /.main -->
+    </div>
+    <!-- ./app -->
+
+    <div th:replace="~{/shared/script}"></div>
+
+</body>
+
+</html>
