@@ -1,5 +1,8 @@
 package com.example.reporting_test.controller;
 
+import java.text.DateFormat;
+import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.example.reporting_test.model.TransactionData;
+
+import javax.swing.text.DateFormatter;
 import java.time.*;
 
 @Controller
@@ -25,6 +30,7 @@ public class ReportingController {
         final String numberNote = "001-727254";
         final String customerNote = "SI254-H.ACEP";
         final String address = "jl. panglima sudirman no.21 surabaya";
+        final String customerName = "H.ACEP";
 
         var data = new ArrayList<TransactionData>();
         Random rand = new Random();
@@ -46,15 +52,23 @@ public class ReportingController {
             return tr.getTotalPrice();
         }).reduce(0.0, (a, b) -> a + b);
 
-        var potongan = 0;
+        var potongan = 0.0;
         var total = subTotal - potongan;
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
 
         model.addAttribute("seller", dummySeller);
         model.addAttribute("store", dummyStore);
         model.addAttribute("transactions", data);
-        model.addAttribute("subTotal", subTotal);
-        model.addAttribute("potongan", potongan);
-        model.addAttribute("total", total);
+        model.addAttribute("subTotal", formatter.format(subTotal));
+        model.addAttribute("potongan", formatter.format(potongan));
+        model.addAttribute("total", formatter.format(total));
+        model.addAttribute("dateNote", dateNote);
+        model.addAttribute("numberNote", numberNote);
+        model.addAttribute("customerNote", customerNote);
+        model.addAttribute("address", address);
+        model.addAttribute("customerName", customerName);
         model.addAttribute("pages", "report");
         return "pages/report";
     }
