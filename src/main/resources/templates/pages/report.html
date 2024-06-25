@@ -37,18 +37,16 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-5">
 
                                     <div class="card-header">
                                         <h4 th:text="${seller}" class="card-title">D'BEST FATMAWATI</h4>
-                                        <h6 th:text="${store}" class="card-subtitle">Striped inverse dark</h4>
+                                        <h4 th:text="${store}" class="card-subtitle">Striped inverse dark</h4>
                                     </div>
                                 </div>
 
-                                <div class="col-6 d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary me-4 mt-4" style="height: 50px;">Print
-                                        Report</button>
-
+                                <div class="col-7 d-flex justify-content-end">
+                                    <a th:href="@{/exports/pdf}">  <button class="btn btn-primary me-4 mt-4" style="height: 50px;">Print PDF</button></a>
                                 </div>
                             </div>
                             <div class="card-content">
