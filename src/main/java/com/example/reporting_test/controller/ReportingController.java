@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import com.example.reporting_test.service.MarkdownUtilService;
 import com.example.reporting_test.service.PdfUtilService;
 import com.lowagie.text.DocumentException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ import java.time.*;
 public class ReportingController {
 
     final PdfUtilService pdfUtilService;
+    final MarkdownUtilService markdownUtilService;
 
     @GetMapping("/")
     public String getTransaction(Model model) {
@@ -66,7 +68,7 @@ public class ReportingController {
         var total = subTotal - potongan;
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
-
+        markdownUtilService.generateMarkdown(data);
 
         model.addAttribute("seller", dummySeller);
         model.addAttribute("store", dummyStore);
