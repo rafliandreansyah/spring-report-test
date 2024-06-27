@@ -37,29 +37,61 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="row">
+                                <div class="col-12 d-flex justify-content-end pb-4 pt-4">
+
+                                    <a th:href="@{/exports/pdf}"> <button class="btn btn-primary me-3 mt-4"
+                                            style="height: 50px;">Print PDF</button></a>
+                                    <a th:href="@{/exports/text}"> <button class="btn btn-success me-3 mt-4"
+                                            style="height: 50px;">Print TXT</button></a>
+                                    <a th:href="@{/exports/csv}"> <button class="btn btn-warning me-4 mt-4"
+                                            style="height: 50px;">Print
+                                            CSV</button></a>
+                                </div>
                                 <div class="col-5">
 
                                     <div class="card-header">
-                                        <h4 th:text="${seller}" class="card-title">D'BEST FATMAWATI</h4>
-                                        <h4 th:text="${store}" class="card-subtitle">Striped inverse dark</h4>
+                                        <h4 th:text="${generateNoteTransactionData.getSeller}" class="card-title">
+                                            D'BEST FATMAWATI</h4>
+                                        <h4 th:text="${generateNoteTransactionData.getStore}" class="card-subtitle">
+                                            Striped inverse dark</h4>
                                     </div>
                                 </div>
 
                                 <div class="col-7 d-flex justify-content-end">
-                                    <a th:href="@{/exports/pdf}">  <button class="btn btn-primary me-4 mt-4" style="height: 50px;">Print PDF</button></a>
+                                    <div class="card-header">
+                                        <h4 class="card-subtitle mb-2">Tanggal : <span
+                                                th:text="${generateNoteTransactionData.dateCreatedNoteFormat}"></span>
+                                        </h4>
+                                        <h4 class="card-subtitle mb-2">Jam : <span
+                                                th:text="${generateNoteTransactionData.timeCreatedNoteFormat}"></span>
+                                        </h4>
+                                        <h4 class="card-subtitle">Halaman : <span
+                                                th:text="${generateNoteTransactionData.pageNote}"></span>
+                                        </h4>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-content">
-                                <div class="card-header">
-                                    <h4 class="card-title">Nota Penjualan</h4>
-                                    <ul>
-                                        <li>Tanggal: <span th:text="${dateNote}"></span>
-                                        </li>
-                                        <li>NOMOR: <span th:text="${numberNote}"></span></li>
-                                        <li>PELANGGAN: <span th:text="${customerNote}"></span></li>
-                                        <li>ALAMAT: <span th:text="${address}"></span></li>
-                                    </ul>
+                                <div class="col-12 d-flex justify-content-center">
+                                    <div class="card-header">
+                                        <h4 class="card-title">NOTA PENJUALAN</h4>
+                                        <ul>
+                                            <li>TANGGAL : <span
+                                                    th:text="${generateNoteTransactionData.dateTransactionNote}"></span>
+                                            </li>
+                                            <li>NOMOR : <span
+                                                    th:text="${generateNoteTransactionData.transactionIdNote}"></span>
+                                            </li>
+                                            <li>PELANGGAN : <span
+                                                    th:text="${generateNoteTransactionData.customerNameNote}"></span>
+                                            </li>
+                                            <li>ALAMAT : <span
+                                                    th:text="${generateNoteTransactionData.customerAddressNote}"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
+
                                 <!-- table dark -->
                                 <div class="table-responsive ps-4 pe-4">
                                     <table class="table table-bordered table-lg">
@@ -74,7 +106,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr th:each="transaction, iteration : ${transactions}">
+                                            <tr
+                                                th:each="transaction, iteration : ${generateNoteTransactionData.transactions}">
                                                 <td th:text="${iteration.count}">1.</td>
                                                 <td th:text="${transaction.noPlu}">DWADAW</td>
                                                 <td th:text="${transaction.productName}">DWADAW</td>
@@ -90,15 +123,21 @@
                                     <div class="p-4">
                                         <div class="col-12">
                                             <div class="row">
-                                                <div>SUB TOTAL: &emsp;<strong th:text="${subTotal}">400000</strong></div>
+                                                <div>SUB TOTAL: &emsp;<strong
+                                                        th:text="${generateNoteTransactionData.subTotalFormat}">400000</strong>
+                                                </div>
                                             </div>
 
                                         </div>
                                         <div class="col-12 mt-2">
-                                            <div>POTONGAN: &emsp;<strong th:text="${potongan}">0</strong></div>
+                                            <div>POTONGAN: &emsp;<strong
+                                                    th:text="${generateNoteTransactionData.potonganFormat}">0</strong>
+                                            </div>
                                         </div>
                                         <div class="col-12 mt-2">
-                                            <div>TOTAL: &emsp;<strong th:text="${total}">400000</strong></div>
+                                            <div>TOTAL: &emsp;<strong
+                                                    th:text="${generateNoteTransactionData.totalFormat}">400000</strong>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +155,8 @@
 
                                 <div class="row mb-5">
                                     <div class="col-6 d-flex justify-content-center">
-                                        (&emsp;<h5 th:text="${customerName}">Pelanggan</h5>&emsp;)
+                                        (&emsp;<h5 th:text="${generateNoteTransactionData.customerName}">Pelanggan</h5>
+                                        &emsp;)
                                     </div>
 
                                     <div class="col-6 d-flex justify-content-center">

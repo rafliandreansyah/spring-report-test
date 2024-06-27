@@ -1,23 +1,23 @@
 package com.example.reporting_test.service;
 
-import com.example.reporting_test.model.TransactionData;
-import com.example.reporting_test.util.Table;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.reporting_test.model.GenerateNoteTransactionData;
+import com.example.reporting_test.util.Table;
 
 @Service
 public class MarkdownUtilService {
 
-    public void generateMarkdown(List<TransactionData> transactionDataList) {
+    public String generateMarkdown(GenerateNoteTransactionData data) {
         Table.Builder tableBuilder = new Table.Builder();
         tableBuilder.addRow("NO.", "NO.PLU", "NAME", "QTY", "HARGA SATUAN", "NETTO");
-        for (int i = 0; i < transactionDataList.size(); i++) {
-            var transaction = transactionDataList.get(i);
+        for (int i = 0; i < data.getTransactions().size(); i++) {
+            var transaction = data.getTransactions().get(i);
             tableBuilder.addRow(i + 1, transaction.getNoPlu(), transaction.getProductName(), transaction.getQuantity(), transaction.getPrice(), transaction.getTotalPrice());
         }
         String[] rows = tableBuilder.build().serialize().split("\n");
@@ -25,27 +25,27 @@ public class MarkdownUtilService {
         int headerLength = headerRow.length();
 
         // Builder Info Store
-        final String userStoreName = "D'BEST FATMAWATI";
-        final String storeName = "PS.SWALAYAN & DEPT.STORE";
+        final String userStoreName = data.getSeller();
+        final String storeName = data.getStore();
 
         // Created
-        final String date = "TANGGAL : 22/06/24";
-        final String time = "JAM     : 16:35:41";
-        final String page = "HALAMAN :    1    ";
+        final String date = "TANGGAL : " + data.getDateCreatedNoteFormat();
+        final String time = "JAM     : " + data.getTimeCreatedNoteFormat();
+        final String page = "HALAMAN :    " + data.getPageNote() +"    ";
 
         // Info Note
-        final String dateNote = "TANGGAL  : 03/01/22";
-        final String numberNote = "NOMOR    : 001-727254";
-        final String customerNote = "PELANGGAN: SI254     -H.ACEP ";
-        final String addressNote = "ALAMAT   : Jl. Panglima Sudirman no 21";
+        final String dateNote = "TANGGAL  : " + data.getDateTransactionNoteFormat();
+        final String numberNote = "NOMOR    : " + data.getTransactionIdNote();
+        final String customerNote = "PELANGGAN: " + data.getCustomerNameNote();
+        final String addressNote = "ALAMAT   : " + data.getCustomerAddressNote();
 
 
         // Total
-        final String subTotal = "397.930";
-        final String pengurangan = "0";
-        final String total = "397.930";
+        final String subTotal = data.getSubTotalFormat();
+        final String pengurangan = data.getPotonganFormat();
+        final String total = data.getTotalFormat();
 
-        final String customerName = "(H.ACEP)";
+        final String customerName = "(" + data.getCustomerName() + ")";
         final String name = "(           )";
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -136,12 +136,9 @@ public class MarkdownUtilService {
         System.out.println(stringBuilder);
         System.out.println(headerRow.length());
 
-        try {
-            exportStringToFile(stringBuilder.toString(), "my_export.txt");
+        return stringBuilder.toString();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
     }
 
     public static void exportStringToFile(String content, String filePath) throws IOException {
@@ -149,3 +146,4 @@ public class MarkdownUtilService {
         Files.write(path, content.getBytes()); // Specify character encoding (optional)
     }
 }
+
