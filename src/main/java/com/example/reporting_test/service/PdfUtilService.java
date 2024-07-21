@@ -2,11 +2,11 @@ package com.example.reporting_test.service;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.reporting_test.model.GenerateNoteTransactionData;
 import com.example.reporting_test.model.TransactionData;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -156,17 +156,17 @@ public class PdfUtilService {
             cell.setPhrase(new Phrase(String.valueOf(transaction.getQuantity()), font));
             table.addCell(cell);
 
-            cell.setPhrase(new Phrase(String.valueOf(transaction.getPrice()), font));
+            cell.setPhrase(new Phrase(String.valueOf(transaction.getHargaSatuanFormatCurrency()), font));
             table.addCell(cell);
 
-            cell.setPhrase(new Phrase(String.valueOf(transaction.getTotalPrice()), font));
+            cell.setPhrase(new Phrase(String.valueOf(transaction.getNettoFormatCurrency()), font));
             table.addCell(cell);
             index += 1;
         }
 
     }
 
-    private void writeSubtotal(PdfPTable table, List<TransactionData> transactionDataList) {
+    private void writeSubtotal(PdfPTable table, String subtotalFormat, String potonganFormat, String totalFormat) {
 
         PdfPCell cell = new PdfPCell();
         cell.setPadding(2);
@@ -179,18 +179,15 @@ public class PdfUtilService {
         font.setSize(12);
         font.setColor(Color.black);
 
-        var subTotal = transactionDataList.stream().map(TransactionData::getTotalPrice).reduce(0.0, Double::sum);
-        var potongan = 0.0;
-        var total = subTotal - potongan;
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        var subTotal = subtotalFormat;
+        var potongan = potonganFormat;
 
         // SUB TOTAL
         cellWhite.setPhrase(new Phrase("", font));
         table.addCell(cellWhite);
         cell.setPhrase(new Phrase("SUB TOTAL", font));
         table.addCell(cell);
-        cell.setPhrase(new Phrase(formatter.format(subTotal), font));
+        cell.setPhrase(new Phrase(subTotal, font));
         table.addCell(cell);
 
         // POTONGAN
@@ -198,7 +195,7 @@ public class PdfUtilService {
         table.addCell(cellWhite);
         cell.setPhrase(new Phrase("POTONGAN", font));
         table.addCell(cell);
-        cell.setPhrase(new Phrase(formatter.format(potongan), font));
+        cell.setPhrase(new Phrase(potongan, font));
         table.addCell(cell);
 
         // TOTAL
@@ -206,12 +203,12 @@ public class PdfUtilService {
         table.addCell(cellWhite);
         cell.setPhrase(new Phrase("TOTAL", font));
         table.addCell(cell);
-        cell.setPhrase(new Phrase(formatter.format(total), font));
+        cell.setPhrase(new Phrase(totalFormat, font));
         table.addCell(cell);
     }
 
 
-    private void writeTransactionSignature(PdfPTable table, PdfPTable table2){
+    private void writeTransactionSignature(PdfPTable table, PdfPTable table2, String customerName){
         PdfPCell cellWhite = new PdfPCell();
         cellWhite.setBorderColor(Color.white);
         cellWhite.setPadding(2);
@@ -228,13 +225,13 @@ public class PdfUtilService {
 
 
         table2.setSpacingBefore(50);
-        cellWhite.setPhrase(new Phrase("( H. ACEP )", font));
+        cellWhite.setPhrase(new Phrase("( " + customerName + " )", font));
         table2.addCell(cellWhite);
         cellWhite.setPhrase(new Phrase("(              )", font));
         table2.addCell(cellWhite);
     }
 
-    public void exportReport(HttpServletResponse response, List<TransactionData> transactionDataList) throws DocumentException, IOException {
+    public void exportReport(HttpServletResponse response, GenerateNoteTransactionData data) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
 
@@ -248,7 +245,7 @@ public class PdfUtilService {
         header1Table.setWidthPercentage(100f);
         header1Table.setWidths(new float[]{7f, 1f, 2f});
         header1Table.setSpacingBefore(10);
-        writeHeader(header1Table, "D'BEST FATMAWATI", "PS.SWALAYAN & DEPT.STORE", "22/06/24", "16:35:41", "1");
+        writeHeader(header1Table, "D'BEST FATMAWATI", "PS.SWALAYAN & DEPT.STORE", data.getDateCreatedNoteFormat(), data.getTimeCreatedNoteFormat(), "1");
         document.add(header1Table);
 
 
@@ -262,7 +259,7 @@ public class PdfUtilService {
         notaTable.setWidthPercentage(100f);
         notaTable.setWidths(new float[]{2.6f, 1.4f, 4f});
         notaTable.setSpacingBefore(5);
-        writeNoteHeader(notaTable, "03/01/22", "001-727254", "SI254     -H.ACEP", "jl simpang gajayana");
+        writeNoteHeader(notaTable, data.getDateTransactionNoteFormat(), data.getTransactionIdNote(), data.getCustomerNameNote(), "");
         document.add(notaTable);
 
 
@@ -272,7 +269,7 @@ public class PdfUtilService {
         transactionTable.setWidths(new float[]{1f, 2f, 3.5f, 2f, 2f, 2f});
         transactionTable.setSpacingBefore(10);
         writeTransactionHeader(transactionTable);
-        writeTransaction(transactionTable, transactionDataList);
+        writeTransaction(transactionTable, data.getTransactions());
         document.add(transactionTable);
 
         // Transaction table total
@@ -280,7 +277,7 @@ public class PdfUtilService {
         transactionTotalTable.setWidthPercentage(100f);
         transactionTotalTable.setWidths(new float[]{5.5f, 1.5f, 2f});
         transactionTotalTable.setSpacingBefore(10);
-        writeSubtotal(transactionTotalTable, transactionDataList);
+        writeSubtotal(transactionTotalTable, data.getSubTotalFormat(), data.getPotonganFormat(), data.getTotalFormat());
         document.add(transactionTotalTable);
 
 
@@ -294,7 +291,7 @@ public class PdfUtilService {
         signtureTable2.setWidthPercentage(100f);
         signtureTable2.setWidths(new float[]{1f, 1f});
         signtureTable2.setSpacingBefore(10);
-        writeTransactionSignature(signtureTable, signtureTable2);
+        writeTransactionSignature(signtureTable, signtureTable2, data.getCustomerName());
         document.add(signtureTable);
         document.add(signtureTable2);
 

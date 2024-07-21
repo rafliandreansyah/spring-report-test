@@ -50,17 +50,20 @@ public class GenerateNoteTransactionData {
 
     public String getSubTotalFormat() {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+        formatter.setMaximumFractionDigits(0);
         return formatter.format(subtotal);
     }
 
     public String getPotonganFormat() {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+        formatter.setMaximumFractionDigits(0);
         return formatter.format(potongan);
     }
 
     public String getTotalFormat() {
         var total = subtotal - potongan;
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("in", "ID"));
+        formatter.setMaximumFractionDigits(0);
         return formatter.format(total);
 
     }

@@ -63,7 +63,7 @@ public class CsvUtilService {
             // Looping data list table
             var index = 1;
             for (TransactionData data : transactionData.getTransactions() ){
-                String[] dataItem = {index + ".", data.getNoPlu(), data.getProductName(), data.getQuantity().toString(), data.getPrice().toString(), data.getTotalPrice().toString()};
+                String[] dataItem = {index + ".", data.getNoPlu(), data.getProductName(), data.getQuantity().toString(), data.getHargaSatuanFormatCurrency(), data.getNettoFormatCurrency()};
                 csvWriter.writeNext(dataItem);
 
                 index += 1;

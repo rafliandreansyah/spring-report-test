@@ -1,8 +1,10 @@
-package com.example.reporting_test.model;
+package com.example.reporting_test.model.dummy;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.example.reporting_test.model.TransactionData;
 
 public class DataDummy {
 

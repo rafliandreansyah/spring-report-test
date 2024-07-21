@@ -18,7 +18,7 @@ public class MarkdownUtilService {
         tableBuilder.addRow("NO.", "NO.PLU", "NAME", "QTY", "HARGA SATUAN", "NETTO");
         for (int i = 0; i < data.getTransactions().size(); i++) {
             var transaction = data.getTransactions().get(i);
-            tableBuilder.addRow(i + 1, transaction.getNoPlu(), transaction.getProductName(), transaction.getQuantity(), transaction.getPrice(), transaction.getTotalPrice());
+            tableBuilder.addRow(i + 1, transaction.getNoPlu(), transaction.getProductName(), transaction.getQuantity(), transaction.getHargaSatuanFormatCurrency(), transaction.getNettoFormatCurrency());
         }
         String[] rows = tableBuilder.build().serialize().split("\n");
         String headerRow = rows[0];
@@ -45,7 +45,7 @@ public class MarkdownUtilService {
         final String pengurangan = data.getPotonganFormat();
         final String total = data.getTotalFormat();
 
-        final String customerName = "(" + data.getCustomerName() + ")";
+        String customerName = "(" + data.getCustomerName() + ")";
         final String name = "(           )";
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -121,7 +121,10 @@ public class MarkdownUtilService {
         stringBuilder.append("\n");
         stringBuilder.append("\n");
 
-
+        
+        if (customerName.length() > 20) {
+            customerName = customerName.split(" ")[0] + ")";
+        }
         //Signature
         stringBuilder.append(" ".repeat(((headerLength) / 4) - "PELANGGAN".length()));
         stringBuilder.append("PELANGGAN");

@@ -37,7 +37,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="row">
-                                <div class="col-12 d-flex justify-content-end pb-4 pt-4">
+                                <!-- <div class="col-12 d-flex justify-content-end pb-4 pt-4">
 
                                     <a th:href="@{/exports/pdf}"> <button class="btn btn-primary me-3 mt-4"
                                             style="height: 50px;">Print PDF</button></a>
@@ -46,7 +46,7 @@
                                     <a th:href="@{/exports/csv}"> <button class="btn btn-warning me-4 mt-4"
                                             style="height: 50px;">Print
                                             CSV</button></a>
-                                </div>
+                                </div> -->
                                 <div class="col-5">
 
                                     <div class="card-header">
@@ -77,7 +77,7 @@
                                         <h4 class="card-title">NOTA PENJUALAN</h4>
                                         <ul>
                                             <li>TANGGAL : <span
-                                                    th:text="${generateNoteTransactionData.dateTransactionNote}"></span>
+                                                    th:text="${generateNoteTransactionData.getDateTransactionNoteFormat}"></span>
                                             </li>
                                             <li>NOMOR : <span
                                                     th:text="${generateNoteTransactionData.transactionIdNote}"></span>
@@ -112,8 +112,8 @@
                                                 <td th:text="${transaction.noPlu}">DWADAW</td>
                                                 <td th:text="${transaction.productName}">DWADAW</td>
                                                 <td th:text="${transaction.quantity}">DWADAW</td>
-                                                <td th:text="${transaction.price}">DWADAW</td>
-                                                <td th:text="${transaction.totalPrice}">DWADAW</td>
+                                                <td th:text="${transaction.getHargaSatuanFormatCurrency}">DWADAW</td>
+                                                <td th:text="${transaction.getNettoFormatCurrency}">DWADAW</td>
                                             </tr>
 
                                         </tbody>

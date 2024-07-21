@@ -43,13 +43,19 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item" th:classappend="${pages == 'report' ? 'active': ''}">
+                <!-- <li class="sidebar-item" th:classappend="${pages == 'report' ? 'active': ''}">
                     <a href="/" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Report</span>
                     </a>
 
 
+                </li> -->
+                <li class="sidebar-item" th:classappend="${pages == 'print-nota' ? 'active': ''}">
+                    <a href="/" class='sidebar-link'>
+                        <i class="bi bi-grid-fill"></i>
+                        <span>Cetak Nota Penjualan</span>
+                    </a>
                 </li>
 
             </ul>
